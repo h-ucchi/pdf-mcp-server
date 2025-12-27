@@ -1,6 +1,6 @@
 # PDF Tools MCP Server
 
-PDFファイルを操作するためのModel Context Protocol (MCP) サーバーです。Claude CodeなどのMCPクライアントから利用できます。
+PDFファイルを操作するためのModel Context Protocol (MCP) サーバーです。Claude Desktop、Claude CodeなどのMCPクライアントから利用できます。
 
 ## 特徴
 
@@ -21,7 +21,7 @@ PDFファイルを操作するためのModel Context Protocol (MCP) サーバー
 
 ```bash
 # リポジトリをクローン
-git clone https://github.com/YOUR_USERNAME/pdf-mcp-server.git
+git clone https://github.com/h-ucchi/pdf-mcp-server.git
 cd pdf-mcp-server
 
 # 依存関係をインストール
@@ -33,7 +33,39 @@ npm run build
 
 ## 使い方
 
-### Claude Codeでの利用
+### Claude Desktop（デスクトップアプリ）での利用
+
+1. Claude Desktopの設定ファイルを開く
+
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+2. 以下の設定を追加
+
+```json
+{
+  "mcpServers": {
+    "pdf-tools": {
+      "command": "node",
+      "args": ["/絶対パス/pdf-mcp-server/build/index.js"]
+    }
+  }
+}
+```
+
+**重要**: `/絶対パス/`の部分を実際のプロジェクトパスに置き換えてください。
+
+3. Claude Desktopを再起動
+
+4. Claude Desktopで自然言語でPDF操作を依頼
+
+```
+PDFから5ページ目を抽出して
+複数のPDFを結合して
+PDFの7ページ目を除外したファイルを作成して
+```
+
+### Claude Code（CLI）での利用
 
 1. MCPサーバーを登録
 
@@ -50,7 +82,7 @@ PDFの7ページ目を除外したファイルを作成して
 PDFの3, 7, 15ページを除いたファイルを作成して
 ```
 
-### MCPサーバーの確認
+3. MCPサーバーの確認
 
 ```bash
 # 登録されているMCPサーバーを確認
@@ -61,21 +93,21 @@ claude mcp list
 
 ### ページの除外（特徴的な機能）
 ```
-FindyAI+のPDFから7ページ目を除いたファイルを作成して
+document.pdfから7ページ目を除いたファイルを作成して
 → 31ページから7ページ目だけを削除した30ページのPDFが作成されます
 
-PDFから3, 7, 15ページを除外して
+presentation.pdfから3, 7, 15ページを除外して
 → 複数ページを一度に除外できます
 ```
 
 ### ページの抽出
 ```
-FindyAI+のPDFから5ページ目を抽出して
+document.pdfから5ページ目を抽出して
 ```
 
 ### PDF結合
 ```
-Desktop/pdf/フォルダ内の全PDFを結合して
+フォルダ内の全PDFを結合して
 ```
 
 ### PDF分割
@@ -100,17 +132,51 @@ npm run build
 npm run build -- --watch
 ```
 
-## ライセンス
+## トラブルシューティング
 
-MIT License - 詳細は [LICENSE](LICENSE) を参照してください。
+### Claude Desktopで「Server disconnected」エラーが出る
 
-## 貢献
+**原因**: macOSのセキュリティ制限により、Claude DesktopがDesktopフォルダ内のファイルにアクセスできない場合があります。
 
-プルリクエストを歓迎します！バグ報告や機能提案は、Issueで受け付けています。
+**解決策**: プロジェクトをホームディレクトリに配置してください。
 
-## 作者
+```bash
+# プロジェクトをホームディレクトリに移動
+mv ~/Desktop/pdf-mcp-server ~/pdf-mcp-server
 
-あなたの名前
+# 設定ファイルのパスを更新
+# ~/Library/Application Support/Claude/claude_desktop_config.json
+{
+  "mcpServers": {
+    "pdf-tools": {
+      "command": "node",
+      "args": ["/Users/YOUR_USERNAME/pdf-mcp-server/build/index.js"]
+    }
+  }
+}
+
+# Claude Desktopを再起動
+```
+
+### ログの確認方法
+
+Claude Desktopのログを確認して、詳細なエラー情報を取得できます。
+
+```bash
+# macOS
+tail -f ~/Library/Logs/Claude/mcp-server-pdf-tools.log
+
+# Windows
+type %USERPROFILE%\AppData\Local\Claude\Logs\mcp-server-pdf-tools.log
+```
+
+### MCPサーバーが起動するか確認
+
+```bash
+# ターミナルで直接実行してテスト
+node /path/to/pdf-mcp-server/build/index.js
+# "PDF Tools MCP Server started" と表示されれば正常
+```
 
 ## 関連リンク
 
