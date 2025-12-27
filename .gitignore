@@ -31,6 +31,9 @@ Thumbs.db
 *.swo
 *~
 
+# Claude Code settings
+.claude/
+
 # Test files
 coverage/
 .nyc_output/
