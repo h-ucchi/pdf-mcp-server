@@ -1,0 +1,6 @@
+# TypeScriptプロジェクトとして認識
+*.ts linguist-detectable=true
+*.js linguist-generated=true
+
+# package-lock.jsonを言語統計から除外
+package-lock.json linguist-generated=true
