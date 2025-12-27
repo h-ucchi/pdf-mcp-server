@@ -18,16 +18,16 @@
     "claude",
     "claude-code"
   ],
-  "author": "あなたの名前 <your.email@example.com>",
+  "author": "h-ucchi",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YOUR_USERNAME/pdf-mcp-server.git"
+    "url": "git+https://github.com/h-ucchi/pdf-mcp-server.git"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/pdf-mcp-server/issues"
+    "url": "https://github.com/h-ucchi/pdf-mcp-server/issues"
   },
-  "homepage": "https://github.com/YOUR_USERNAME/pdf-mcp-server#readme",
+  "homepage": "https://github.com/h-ucchi/pdf-mcp-server#readme",
   "engines": {
     "node": ">=18.0.0"
   },
