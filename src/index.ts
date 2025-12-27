@@ -137,6 +137,29 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         required: ["input_path"],
       },
     },
+    {
+      name: "reorder_pages",
+      description: "PDFのページを指定した順序に並び替える",
+      inputSchema: {
+        type: "object",
+        properties: {
+          input_path: {
+            type: "string",
+            description: "元のPDFファイルのパス",
+          },
+          page_order: {
+            type: "array",
+            items: { type: "number" },
+            description: "新しいページ順序（1始まり）の配列。例: [1, 3, 2, 5, 4]",
+          },
+          output_path: {
+            type: "string",
+            description: "出力先のファイルパス",
+          },
+        },
+        required: ["input_path", "page_order", "output_path"],
+      },
+    },
   ],
 }));
 
@@ -182,6 +205,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "get_pdf_info":
         return await getPDFInfo(args.input_path as string);
+
+      case "reorder_pages":
+        return await reorderPages(
+          args.input_path as string,
+          args.page_order as number[],
+          args.output_path as string
+        );
 
       default:
         throw new Error(`Unknown tool: ${name}`);
@@ -339,6 +369,39 @@ async function getPDFInfo(inputPath: string) {
       {
         type: "text",
         text: `📋 PDF情報:\n${JSON.stringify(info, null, 2)}`,
+      },
+    ],
+  };
+}
+
+// ページ並び替え
+async function reorderPages(inputPath: string, pageOrder: number[], outputPath: string) {
+  const pdfBytes = await readFile(inputPath);
+  const pdf = await PDFDocument.load(pdfBytes);
+  const totalPages = pdf.getPageCount();
+
+  // ページ番号を1始まりから0始まりに変換
+  const pageIndices = pageOrder.map((p) => p - 1);
+
+  // 範囲チェック
+  for (const index of pageIndices) {
+    if (index < 0 || index >= totalPages) {
+      throw new Error(`ページ番号が範囲外です: ${index + 1} (総ページ数: ${totalPages})`);
+    }
+  }
+
+  const newPdf = await PDFDocument.create();
+  const copiedPages = await newPdf.copyPages(pdf, pageIndices);
+  copiedPages.forEach((page) => newPdf.addPage(page));
+
+  const newPdfBytes = await newPdf.save();
+  await writeFile(outputPath, newPdfBytes);
+
+  return {
+    content: [
+      {
+        type: "text",
+        text: `✅ ページを並び替えました: ${pageOrder.join(", ")} → ${outputPath}`,
       },
     ],
   };
