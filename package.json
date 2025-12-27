@@ -1,0 +1,44 @@
+{
+  "name": "pdf-mcp-server",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for PDF operations with page exclusion feature",
+  "type": "module",
+  "main": "./build/index.js",
+  "scripts": {
+    "build": "tsc && chmod +x build/index.js"
+  },
+  "bin": {
+    "pdf-tools": "./build/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "pdf",
+    "pdf-tools",
+    "claude",
+    "claude-code"
+  ],
+  "author": "あなたの名前 <your.email@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/pdf-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/pdf-mcp-server/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/pdf-mcp-server#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.27",
+    "@types/pdf-parse": "^1.1.5",
+    "typescript": "^5.0.0"
+  }
+}
